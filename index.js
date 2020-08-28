@@ -1,126 +1,147 @@
 (function(){
     'use strict';
     
+    const typejson = 'https://legitsoulja.github.io/TypeIt/typeit.json';
+    
     new class {
         
         constructor(){
-            this.sentenceDivCorrect = document.querySelector('span.correct');
-            this.sentenceDiv = document.querySelector('span.sentence');
-            this.textarea = document.querySelector('textarea');
-            this.errorsE = document.querySelector('.errors');
-            this.time = document.querySelector('span.time');
-            this.stageE = document.querySelector('span.stage');
-            this.sentences = [];
-            this.sentence = null;
-            this.sentencePosition = 0;
-            this.typed = null;
-            fetch('typeit.json?c=' + this.rand(100,999999)).then(x => x.json()).then(x => {
-                this.sentences = x;
-                this.createListeners();
-                this.generate();
-            });
-            this.errors = 0;
-            this.ignoredCodes = [8];
-            this.interval = setInterval(this.update.bind(this), 1000);
+            
+            this.types = [];
+            this.typePointer = 0;
+            this.type = "";
+            this.started = false;
             this.stage = 0;
-            this.started= false;
-            this.startTime = null;
+            this.mistakes = 0;
+            this.mistakeCap = 5;
+            this.time = 0;
+            this.ignoredKeys = [8, 13];
+            this.typeMeans = [];
+            this.typed = 0;
+            this.tick = 0;
+            this.el = {
+                textarea: document.querySelector('textarea'),
+                mistakes: document.querySelector('span.mistakes'),
+                stage: document.querySelector('span.stage'),
+                time: document.querySelector('span.time'),
+                correct: document.querySelector('span.correct'),
+                type: document.querySelector('span.type')
+            };
+            this.e = new Proxy(this.el, { get: (o, n) => ((o.hasOwnProperty(n)) ? o[n].innerText : ""),
+                set: function(o, n, v) {
+                    if(o.hasOwnProperty(n)) o[n].innerText = v;
+                    return true;
+                }
+            });
+            
+            fetch(typejson + '?c=' + this.rand(99, 9999)).then(x => x.json()).then(this.init.bind(this));
+            
         }
         
-        rand(min, max) {
-            if(arguments.length == 1) {
-                max = min;
-                min = 0;
+        init(types){
+            this.types = types;
+            this.type = "";
+            this.interval = setInterval(this.update.bind(this), 10);
+            this.registerListeners();
+            this.generate();
+            this.updateView();
+        }
+        
+        registerListeners(){
+            this.el.textarea.onkeydown = (e) => {
+                if(this.ignoredKeys.indexOf(e.keyCode) > -1) 
+                    return e.preventDefault();
             }
-            return Math.floor(Math.random() * (max + min) - min);
+            this.el.textarea.onkeypress = this.keypress.bind(this);
         }
         
-        createListeners(){
-            this.textarea.onkeydown = function(e) {
-                if(this.ignoredCodes.indexOf(e.keyCode) > -1) {
-                    e.preventDefault();
+        keypress(e){
+            if(!this.started) {
+                this.started = true;
+                this.time = (new Date()).getTime();
+            }
+            
+            if(this.type[this.typePointer] != e.key){
+                if(this.ignoredKeys.indexOf(e.keyCode) > -1) return false;
+                this.mistakes++;
+                this.updateView();
+                if(this.mistakes > this.mistakeCap) {
+                    alert(['You loose!. You\'ve made '+this.mistakes + '/' + this.mistakeCap + 'mistakes. Learn to type!',
+                     'Final Time: ' + this.getTime(),
+                     'Words Typed: ' + this.typed,
+                     'Average Words Per Minute: ' + ''
+                    ].join('\r\n'));
+                    this.restart();
                 }
-            }.bind(this);
-            this.textarea.onkeypress = function(e){
-                if(e.location == 1) return false;
                 
-                if(!this.started) {
-                    this.started = true;
-                    this.startTime = new Date().getTime();
+                return false;
+            }
+            this.typed++;
+            if((this.typePointer += 1) >= this.type.length)
+            {
+                this.generate();
+                return false;
+            }
+            return true;
+        }
+        
+        getTime(){
+            let el = ((this.time == 0) ? 0 : ((new Date()).getTime() - this.time));
+            let hours = Math.floor(Math.abs(el / (60000 * 60)));
+            let minutes = Math.floor(Math.abs(el / 60000));
+            let seconds = Math.floor(Math.abs(el / 1000) % 60);
+            hours = (hours > 10) ? hours : ('0' + hours);
+            minutes = (minutes > 10) ? minutes : ('0' + minutes);
+            seconds = (seconds > 10) ? seconds : ('0' + seconds);
+            return hours + ':' + minutes + ':' + seconds;
+        }
+        
+        updateView(){
+            this.e.type = ((this.typePointer > 0) ? this.type.substr(this.typePointer) : this.type);
+            this.e.correct = ((this.typePointer > 0) ? this.type.substr(0, this.typePointer) : "");
+            this.mistakeCap = (2 * this.stage) * 2 + 1;
+            this.e.mistakes = this.mistakes.toString() + '/' + this.mistakeCap;
+            this.e.stage = this.stage.toString();
+            this.e.time = this.getTime();
+        }
+        
+        update(){
+            this.updateView();
+            if(((this.tick += 1) % 100) == 0) {
+                if(this.typeMeans.length == 0) {
+                    if(this.typed != 0) this.typeMeans.push(this.typed);
+                }else {
+                    let last = this.typeMeans[this.typeMeans.length - 1];
+                    let add = this.typed - last;
+                    if(add != 0 && last != add) this.typeMeans.push(add);
                 }
-                
-                if(!this.input(e.key)) {
-                    if(e.key != '.') {
-                        this.errors++;
-                        this.errorsE.innerText = this.errors.toString();
-                    }
-                    
-                    if(this.errors >= 5) {
-                        alert('You loose! You\'ve made more than 5 mistakes! Learn to type!');
-                        this.restart();
-                    }
-                    
-                    e.preventDefault();
-                }
-            }.bind(this);
+            }
+        }
+        
+        generate(){
+            this.type = this.types[this.rand(0, this.types.length)];
+            this.el.textarea.value = "";
+            this.typePointer = 0;
+            this.stage++;
         }
         
         restart(){
-            this.errors = 0;
             this.stage = 0;
-            this.sentencePosition = 0;
+            this.mistakes = 0;
+            this.tick = 0;
+            this.time = 0;
+            this.typeMeans = [];
+            this.typed = 0;
+            this.typePointer = 0;
             this.started = false;
             this.generate();
         }
         
-        update (){
-            if(this.sentencePosition > 0) {
-                this.sentenceDiv.innerText = this.sentence.substr(this.sentencePosition);
-                this.sentenceDivCorrect.innerText = this.sentence.substr(0, this.sentencePosition);
-            }else {
-                this.sentenceDiv.innerText = this.sentence;
-                this.sentenceDivCorrect.innerText = "";
-            }
-            
-            if(this.started && this.startTime != null) {
-                let el = (new Date()).getTime() - this.startTime;
-                let hours = Math.floor(Math.abs(el / (3600000)));
-                let minutes = Math.floor(Math.abs(el / 60000)) % 60;
-                let seconds = Math.floor(Math.abs(el / 1000)) % 60;
-                
-                hours = ((hours > 10) ? hours : ("0" + hours));
-                minutes = ((minutes > 10) ? minutes : ("0" + minutes));
-                seconds = ((seconds > 10) ? seconds : ("0" + seconds));
-                
-                this.time.innerText = hours + ':' + minutes + ':' + seconds;
-            }
-            this.stageE.innerText = this.stage.toString();
-            this.errorsE.innerText = this.errors.toString();
-        }
-        
-        generate(){
-            this.stage++;
-            this.errors = 0;
-            this.sentence = this.sentences[this.rand(0, this.sentences.length)];
-            this.sentencePosition = 0;
-            this.sentenceDivCorrect.innerText = "";
-            this.textarea.value = "";
-            this.update(); 
-        }
-        
-        input(char) {
-            if(this.sentence[this.sentencePosition] == char) {
-                if(this.sentencePosition + 1 >= this.sentence.length) {
-                    this.generate();
-                    return false;
-                }
-                this.sentencePosition++;
-                this.update();
-                return true;
-            }
-            return false;
+        rand(min, max) {
+            return Math.floor(Math.random() * (max + min) - min);
         }
         
         
     }
+    
 })();
