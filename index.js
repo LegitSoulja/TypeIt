@@ -14,7 +14,7 @@
             this.sentence = null;
             this.sentencePosition = 0;
             this.typed = null;
-            fetch('typeit.json').then(x => x.json()).then(x => {
+            fetch('typeit.json?c=' + this.rand(100,999999)).then(x => x.json()).then(x => {
                 this.sentences = x;
                 this.createListeners();
                 this.generate();
