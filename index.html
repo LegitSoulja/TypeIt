@@ -5,11 +5,16 @@
         <title>TypeIt</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            * { margin: 0; }
-            body, html, .container, textarea { width: 100%; height: 100%)}
+            * { margin: 0;  }
+            body, html { width: 100%; height: 100% }
+            
+            .container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
             
             .correct, .type {
-                width: 100%;
                 color: white;
                 font-size: 50px;
             }
@@ -24,9 +29,13 @@
             }
             
             textarea{
+                padding: 2%;
                 height: 80%;
                 font-size: 35px;
-                padding: 2%;
+                width: 100%;
+                -webkit-box-sizing: border-box;
+                   -moz-box-sizing: border-box;
+                        box-sizing: border-box;
             }
             
             .correct {
@@ -35,6 +44,7 @@
             
             .stats {
                 padding:5px;
+                
                 font-size:20px;
                 font-weight: bold;
             }
