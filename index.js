@@ -25,7 +25,8 @@
                 stage: document.querySelector('span.stage'),
                 time: document.querySelector('span.time'),
                 correct: document.querySelector('span.correct'),
-                type: document.querySelector('span.type')
+                type: document.querySelector('span.type'),
+                typed: document.querySelector('span.typed')
             };
             this.e = new Proxy(this.el, { get: (o, n) => ((o.hasOwnProperty(n)) ? o[n].innerText : ""),
                 set: function(o, n, v) {
@@ -102,6 +103,7 @@
             this.mistakeCap = (2 * this.stage) * 2 + 1;
             this.e.mistakes = this.mistakes.toString() + '/' + this.mistakeCap;
             this.e.stage = this.stage.toString();
+            this.e.typed = this.typed.toString();
             this.e.time = this.getTime();
         }
         
@@ -138,7 +140,7 @@
         }
         
         rand(min, max) {
-            return Math.floor(Math.random() * (max + min) - min);
+            return Math.floor(Math.random() * (max - min) + min);
         }
         
         
