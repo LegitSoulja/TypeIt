@@ -1,0 +1,67 @@
+<html>
+
+    <head>
+        <title>TypeIt</title>
+        <style>
+            * { margin: 0; }
+            body, html, .container, textarea { width: 100%; height: 100%)}
+            
+            .sentence, .correct {
+                width: 100%;
+                
+                color: white;
+                font-size: 25px;
+            }
+            
+            .content {
+                padding: 5%;
+                background-color: #141414;
+            }
+            
+            textarea{
+                height: 50%;
+                font-size: 30px;
+                padding: 2%;
+            }
+            
+            .correct {
+                color: green;
+            }
+            
+            .stats {
+                padding:5px;
+                font-size:20px;
+                font-weight: bold;
+            }
+            
+            .stage {
+                color: green;
+            }
+            
+            .time {
+                color: orange;
+            }
+            
+            .errors{color:red}
+            
+        </style>
+    </head>
+    
+    <body>
+    
+        <div class='container'>
+            <div class='content'>
+                <div class='sentence'>
+                    <span class='correct'></span><span class='sentence'></span>
+                </div>
+            </div>
+            <div class='stats'>
+                <span>Mistakes: <span class='errors'>0</span>, Stage: <span class='stage'>0</span>, Time: <span class='time'>00:00:00</span></span>
+            </div>
+            <textarea placeholder='Start typing to begin'></textarea>
+        </div>
+        
+        <script type='text/javascript' src='index.js'></script>
+    </body>
+    
+</html>
