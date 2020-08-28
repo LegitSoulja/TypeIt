@@ -65,7 +65,7 @@
                 if(this.ignoredKeys.indexOf(e.keyCode) > -1) return false;
                 this.mistakes++;
                 this.updateView();
-                if(this.mistakes > this.mistakeCap) {
+                if(this.mistakes >= this.mistakeCap) {
                     alert(['You loose!. You\'ve made '+this.mistakes + '/' + this.mistakeCap + 'mistakes. Learn to type!',
                      'Final Time: ' + this.getTime(),
                      'Words Typed: ' + this.typed,
