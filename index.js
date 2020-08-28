@@ -84,9 +84,13 @@
             
             if(this.started && this.startTime != null) {
                 let el = (new Date()).getTime() - this.startTime;
-                let hours = Math.floor(Math.abs(el / (60000 * 60)));
-                let minutes = Math.floor(Math.abs(el / 60000));
-                let seconds = Math.floor(Math.abs(el / 1000));
+                let hours = Math.floor(Math.abs(el / (3600000)));
+                let minutes = Math.floor(Math.abs(el / 60000)) % 60;
+                let seconds = Math.floor(Math.abs(el / 1000)) % 60;
+                
+                hours = ((hours > 10) ? hours : ("0" + hours));
+                minutes = ((minutes > 10) ? minutes : ("0" + minutes));
+                seconds = ((seconds > 10) ? seconds : ("0" + seconds));
                 
                 this.time.innerText = hours + ':' + minutes + ':' + seconds;
             }
@@ -101,8 +105,7 @@
             this.sentencePosition = 0;
             this.sentenceDivCorrect.innerText = "";
             this.textarea.value = "";
-            this.update();
-            
+            this.update(); 
         }
         
         input(char) {
