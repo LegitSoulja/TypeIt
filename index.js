@@ -18,7 +18,7 @@
     
     
     const LANGUAGE = args.lang;
-    const typejson = 'https://legitsoulja.github.io/TypeIt/typeit_'+LANGUAGE+'.json';
+    const typejson = 'https://legitsoulja.github.io/TypeIt/lang/typeit_'+LANGUAGE+'.json';
     
     new class {
         
