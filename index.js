@@ -12,6 +12,8 @@
                 args[s[0]] = s[1];
             }
         })
+        if(!args.hasOwnProperty('lang'))
+            args['lang'] = 'en';
     }else args = {lang:'en'};
     
     
