@@ -3,7 +3,7 @@
     
     
     var args = document.location.href.split('?');
-    if(args.length > 0) {
+    if(args.length > 1) {
         let a = args[1].split('&');
         args = {};
         a.forEach(x => {
