@@ -1,14 +1,22 @@
-/*
-*| Created: August 28, 2020
-*| Author: LegitSoulja a.k.a Segfault
-*| License: MIT (Do Whatever)
-*| Contributers: (...)
-*/
-
 (function(){
     'use strict';
     
-    const typejson = 'https://legitsoulja.github.io/TypeIt/typeit.json';
+    
+    var args = document.location.href.split('?');
+    if(args.length > 0) {
+        let a = args[1].split('&');
+        args = {};
+        a.forEach(x => {
+            let s = x.split('=');
+            if(s.length >= 2) {
+                args[s[0]] = s[1];
+            }
+        })
+    }else args = {lang:'en'};
+    
+    
+    const LANGUAGE = args.lang ?? 'en';
+    const typejson = 'https://legitsoulja.github.io/TypeIt/typeit_'+LANGUAGE+'.json';
     
     new class {
         
@@ -32,8 +40,7 @@
                 stage: document.querySelector('span.stage'),
                 time: document.querySelector('span.time'),
                 correct: document.querySelector('span.correct'),
-                type: document.querySelector('span.type'),
-                typed: document.querySelector('span.typed')
+                type: document.querySelector('span.type')
             };
             this.e = new Proxy(this.el, { get: (o, n) => ((o.hasOwnProperty(n)) ? o[n].innerText : ""),
                 set: function(o, n, v) {
@@ -76,7 +83,7 @@
                 if(this.mistakes >= this.mistakeCap) {
                     alert(['You loose!. You\'ve made '+this.mistakes + '/' + this.mistakeCap + 'mistakes. Learn to type!',
                      'Final Time: ' + this.getTime(),
-                     'Letters Typed: ' + this.typed,
+                     'Words Typed: ' + this.typed,
                      'Average Words Per Minute: ' + ''
                     ].join('\r\n'));
                     this.restart();
@@ -110,7 +117,6 @@
             this.mistakeCap = (2 * this.stage) * 2 + 1;
             this.e.mistakes = this.mistakes.toString() + '/' + this.mistakeCap;
             this.e.stage = this.stage.toString();
-            this.e.typed = this.typed.toString();
             this.e.time = this.getTime();
         }
         
@@ -147,7 +153,7 @@
         }
         
         rand(min, max) {
-            return Math.floor(Math.random() * (max - min) + min);
+            return Math.floor(Math.random() * (max + min) - min);
         }
         
         
