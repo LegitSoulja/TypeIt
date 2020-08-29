@@ -76,7 +76,7 @@
                 if(this.mistakes >= this.mistakeCap) {
                     alert(['You loose!. You\'ve made '+this.mistakes + '/' + this.mistakeCap + 'mistakes. Learn to type!',
                      'Final Time: ' + this.getTime(),
-                     'Words Typed: ' + this.typed,
+                     'Letters Typed: ' + this.typed,
                      'Average Words Per Minute: ' + ''
                     ].join('\r\n'));
                     this.restart();
