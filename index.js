@@ -1,3 +1,10 @@
+/*
+*| Created: August 28, 2020
+*| Author: LegitSoulja a.k.a Segfault
+*| License: MIT (Do Whatever)
+*| Contributers: (...)
+*/
+
 (function(){
     'use strict';
     
