@@ -39,17 +39,17 @@
                 }
             });
             
-            fetch(typejson + '?c=' + this.rand(99, 9999)).then(x => x.json()).then(this.init.bind(this));
+            fetch(typejson + '?c=' + Math.random()).then(x => x.json()).then(this.init.bind(this));
             
         }
         
         init(types){
             this.types = types;
             this.type = "";
-            this.interval = setInterval(this.update.bind(this), 10);
             this.registerListeners();
             this.generate();
             this.updateView();
+            this.interval = setInterval(this.update.bind(this), 100);
         }
         
         registerListeners(){
@@ -69,7 +69,6 @@
             if(this.type[this.typePointer] != e.key){
                 if(this.ignoredKeys.indexOf(e.keyCode) > -1) return false;
                 this.mistakes++;
-                this.updateView();
                 if(this.mistakes >= this.mistakeCap) {
                     alert(['You loose!. You\'ve made '+this.mistakes + '/' + this.mistakeCap + 'mistakes. Learn to type!',
                      'Final Time: ' + this.getTime(),
@@ -88,6 +87,7 @@
                 this.generate();
                 return false;
             }
+            this.updateView();
             return true;
         }
         
@@ -114,8 +114,8 @@
         }
         
         update(){
-            this.updateView();
-            if(((this.tick += 1) % 100) == 0) {
+            this.tick++;
+            if(this.tick % 100 == 0) {
                 if(this.typeMeans.length == 0) {
                     if(this.typed != 0) this.typeMeans.push(this.typed);
                 }else {
