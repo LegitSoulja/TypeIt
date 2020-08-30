@@ -82,7 +82,7 @@
                 return false;
             }
             this.typed++;
-            if(e.keyCode == 32) this.words++;
+            if(e.keyCode == 32 || e.keyCode == 190) this.words++;
             if((this.typePointer += 1) >= this.type.length)
             {
                 this.generate();
