@@ -48,7 +48,6 @@
             this.type = "";
             this.registerListeners();
             this.generate();
-            this.updateView();
             this.interval = setInterval(this.update.bind(this), 100);
         }
         
@@ -133,6 +132,7 @@
             this.el.textarea.value = "";
             this.typePointer = 0;
             this.stage++;
+            this.updateView();
         }
         
         restart(){
