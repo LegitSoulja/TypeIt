@@ -2,22 +2,9 @@
     'use strict';
     
     
-    var args = document.location.href.split('?');
-    if(args.length > 1) {
-        let a = args[1].split('&');
-        args = {};
-        a.forEach(x => {
-            let s = x.split('=');
-            if(s.length >= 2) {
-                args[s[0]] = s[1];
-            }
-        })
-        if(!args.hasOwnProperty('lang'))
-            args['lang'] = 'en';
-    }else args = {lang:'en'};
     
-    
-    const LANGUAGE = args.lang;
+    const ARGS = Object.fromEntries((document.location.href.split('?').splice(1)[0] || 'lang=en').split('&').map(x => x.split('=')));
+    const LANGUAGE = ARGS.lang;
     const typejson = 'https://legitsoulja.github.io/TypeIt/lang/typeit_'+LANGUAGE+'.json';
     
     new class {
