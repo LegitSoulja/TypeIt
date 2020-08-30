@@ -1,8 +1,6 @@
 (function(){
     'use strict';
     
-    
-    
     const ARGS = Object.fromEntries((document.location.href.split('?').splice(1)[0] || 'lang=en').split('&').map(x => x.split('=')));
     const LANGUAGE = ARGS.lang;
     const typejson = 'https://legitsoulja.github.io/TypeIt/lang/typeit_'+LANGUAGE+'.json';
@@ -22,6 +20,7 @@
             this.ignoredKeys = [8, 13];
             this.typeMeans = [];
             this.typed = 0;
+            this.words = 0;
             this.tick = 0;
             this.el = {
                 textarea: document.querySelector('textarea'),
@@ -30,7 +29,8 @@
                 time: document.querySelector('span.time'),
                 correct: document.querySelector('span.correct'),
                 type: document.querySelector('span.type'),
-                typed: document.querySelector('span.typed')
+                typed: document.querySelector('span.typed'),
+                words: document.querySelector('span.words')
             };
             this.e = new Proxy(this.el, { get: (o, n) => ((o.hasOwnProperty(n)) ? o[n].innerText : ""),
                 set: function(o, n, v) {
@@ -73,15 +73,16 @@
                 if(this.mistakes >= this.mistakeCap) {
                     alert(['You loose!. You\'ve made '+this.mistakes + '/' + this.mistakeCap + 'mistakes. Learn to type!',
                      'Final Time: ' + this.getTime(),
-                     'Words Typed: ' + this.typed,
+                     'Letters Typed: ' + this.typed,
+                     'Words Typed: ' + this.words,
                      'Average Words Per Minute: ' + ''
                     ].join('\r\n'));
                     this.restart();
                 }
-                
                 return false;
             }
             this.typed++;
+            if(e.keyCode == 32) this.words++;
             if((this.typePointer += 1) >= this.type.length)
             {
                 this.generate();
@@ -108,6 +109,7 @@
             this.e.mistakes = this.mistakes.toString() + '/' + this.mistakeCap;
             this.e.stage = this.stage.toString();
             this.e.typed = this.typed.toString();
+            this.e.words = this.words.toString();
             this.e.time = this.getTime();
         }
         
@@ -135,6 +137,7 @@
             this.stage = 0;
             this.mistakes = 0;
             this.tick = 0;
+            this.words = 0;
             this.time = 0;
             this.typeMeans = [];
             this.typed = 0;
