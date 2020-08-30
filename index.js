@@ -110,12 +110,13 @@
             this.e.stage = this.stage.toString();
             this.e.typed = this.typed.toString();
             this.e.words = this.words.toString();
-            this.e.time = this.getTime();
+            
         }
         
         update(){
             this.tick++;
             if(this.tick % 100 == 0) {
+                this.e.time = this.getTime();
                 if(this.typeMeans.length == 0) {
                     if(this.typed != 0) this.typeMeans.push(this.typed);
                 }else {
