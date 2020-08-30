@@ -118,7 +118,7 @@
             // keep view updated incase someone tries to "edit" html lol.
             if(this.tick % 5 == 0) this.updateView();
             if(this.tick % 10 == 0) {
-                if(this.time != 0) this.e.time = this.getTime();
+                this.e.time = this.getTime();
                 if(this.typeMeans.length == 0) {
                     if(this.typed != 0) this.typeMeans.push(this.typed);
                 }else {
