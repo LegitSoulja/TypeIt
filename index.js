@@ -78,6 +78,7 @@
                     ].join('\r\n'));
                     this.restart();
                 }
+                this.updateView();
                 return false;
             }
             this.typed++;
