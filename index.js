@@ -115,7 +115,7 @@
         
         update(){
             this.tick++;
-            if(this.tick % 100 == 0) {
+            if(this.tick % 10 == 0) {
                 this.e.time = this.getTime();
                 if(this.typeMeans.length == 0) {
                     if(this.typed != 0) this.typeMeans.push(this.typed);
