@@ -93,12 +93,12 @@
         
         getTime(){
             let el = ((this.time == 0) ? 0 : ((new Date()).getTime() - this.time));
-            let hours = Math.floor(Math.abs(el / (60000 * 60)));
+            let hours = Math.floor(Math.abs(el / 3600000));
             let minutes = Math.floor(Math.abs(el / 60000));
             let seconds = Math.floor(Math.abs(el / 1000) % 60);
             hours = (hours > 10) ? hours : ('0' + hours);
-            minutes = (minutes > 10) ? minutes : ('0' + minutes);
-            seconds = (seconds > 10) ? seconds : ('0' + seconds);
+            minutes = (minutes >= 10) ? minutes : ('0' + minutes);
+            seconds = (seconds >= 10) ? seconds : ('0' + seconds);
             return hours + ':' + minutes + ':' + seconds;
         }
         
